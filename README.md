@@ -1,9 +1,9 @@
 # gomoku_renju_board_game
 
 <picture>
- <source media="(prefers-color-scheme: dark)" srcset="https://github.com/jmhummer/gomoku_renju_board_game/media/dark_mode_board.png">
- <source media="(prefers-color-scheme: light)" srcset="https://github.com/jmhummer/gomoku_renju_board_game/media/light_mode_board.png">
- <img alt="An image of a partially completed game of gomoku using ASCII characters to visualize the board." src="https://github.com/jmhummer/gomoku_renju_board_game/media/light_mode_board.png">
+ <source media="(prefers-color-scheme: dark)" srcset="media/dark_mode_board.png">
+ <source media="(prefers-color-scheme: light)" srcset="media/light_mode_board.png">
+ <img alt="An image of a partially completed game of gomoku using ASCII characters to visualize the board." src="media/light_mode_board.png">
 </picture>
 
 ## Rules and Info
@@ -14,7 +14,7 @@
 which is called an overline, there's no restriction on this in freestyle Gomoku. The line can be created vertically, horizontally, or diagonally. A few examples are provided below.
 
 <picture>
- <img alt="An image of a partially completed game of gomoku using ASCII characters to visualize the board." src="https://github.com/jmhummer/gomoku_renju_board_game/media/gomoku_example.png">
+ <img alt="An image of a partially completed game of gomoku using ASCII characters to visualize the board." src="media/gomoku_example.png">
 </picture>
 
  ### Renju Basics
@@ -27,7 +27,7 @@ least one empty intersection on both ends. Your opponent can't stop you from cre
 examples of open fours.
 
 <picture>
- <img alt="An image of a partially completed game of gomoku using ASCII characters to visualize the board." src="https://github.com/jmhummer/gomoku_renju_board_game/media/renju_example.png">
+ <img alt="An image of a partially completed game of gomoku using ASCII characters to visualize the board." src="media/renju_example.png">
 </picture>
 
 With this concept clear, we define the forbidden moves in Renju as: (1) a move that creates at least two open fours; (2) a move that creates at least one
@@ -43,10 +43,10 @@ stone player into making a forbidden move.
 3. Enter the "make" command and the Makefile will compile and link all files via gcc commands
 4. Run either the Gomoku or Renju program with the following commands. In the following list, ./gomoku can be substituted for ./renju.
 
-./gomoku                    -> Initiates a gomoku game with a 15x15 size board
-./gomoku -b ##              -> Initiates a gomoku game with a ##x## size board. Boards can be 15x15, 17x17 or 19x19
-./gomoku -o filename.gmk    -> Initiates a gomoku game which will save its progress as the given file when the program ends
-./gomoku -r filename.gmk    -> Resumes a saved gomoku game from its saved point
+./gomoku                    -> Initiates a gomoku game with a 15x15 size board\
+./gomoku -b ##              -> Initiates a gomoku game with a ##x## size board. Boards can be 15x15, 17x17 or 19x19\
+./gomoku -o filename.gmk    -> Initiates a gomoku game which will save its progress as the given file when the program ends\
+./gomoku -r filename.gmk    -> Resumes a saved gomoku game from its saved point\
 
 The above commands can be used any in combination with each other with the exception of -b and -r; the board size of an existing game cannot be edited.
 
