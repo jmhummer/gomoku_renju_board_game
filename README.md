@@ -29,7 +29,7 @@ least one empty intersection on both ends. Your opponent can't stop you from cre
 examples of open fours.
 
 <picture>
-<source media="(prefers-color-scheme: dark)" srcset="media/renju_example.png">
+<source media="(prefers-color-scheme: dark)" srcset="media/renju_examples.png">
  <source media="(prefers-color-scheme: light)" srcset="media/renju_examples.png">
  <img alt="An image of a four different sample boards with four black stones in a line oriented different directions." src="media/renju_examples.png">
 </picture>
