@@ -1,0 +1,172 @@
+#include "board.h"
+#include "error-codes.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+board* board_create( unsigned char size )
+{
+    if ( size != 15 && size != 17 && size != 19 ) {
+        exit( BOARD_SIZE_ERR );
+    }
+    board *b = ( board *)malloc( sizeof( board ) );
+    b->size = size;
+    
+    //Allocate memory
+    b->grid = ( unsigned char * )malloc( size * size * sizeof( char ) );
+    if (b->grid == NULL) {
+        fprintf(stderr, "ERROR: Failed to allocate memory\n");
+        exit(1);
+    }
+    //Populate the grid with empty intersections
+    unsigned char( *grid )[ b->size ] = ( unsigned char( * )[ b->size ] ) b->grid;
+    for ( int i = b->size - 1; i >= 0; i-- ) { //Iterate through rows
+        for ( int j = b->size - 1; j >= 0; j-- ) { //Iterate through columns
+            grid[i][j] = EMPTY_INTERSECTION;
+        }
+    }
+    return b;
+}
+
+void board_delete( board* b )
+{
+    if (b == NULL ) {
+        exit( NULL_POINTER_ERR );
+    }
+    free( b->grid );
+    free( b );
+}
+
+void board_print( board* b, bool in_place )
+{
+    //Cast grid
+    unsigned char( *grid )[ b->size ] = ( unsigned char( * )[ b->size ] ) b->grid;
+    //Clear the terminal if requested
+    if ( in_place ) {
+        clear();
+    }
+    //Assume the grid is populated correctly (i.e. saved game loads board, new game empty board, etc.)
+    //Print the row # descending by size followed by the grid with intersections and dashes
+    for ( int i = b->size - 1; i >= 0; i-- ) {
+        printf( "%2d ", (i + 1) ); //Print out row number
+        //Print out the intersections with dashes
+        for ( int j = 0; j < b->size; j++ ) {
+            //Intersection print
+            unsigned char stone = grid[i][j];
+            if ( stone == EMPTY_INTERSECTION ) {
+                printf( "+" );
+            } else if ( stone == BLACK_STONE ) {
+                printf( "\u25CF" );
+            } else if ( stone == WHITE_STONE ) {
+                printf( "\u25CB" );
+            } else {
+                exit( STONE_TYPE_ERR );
+            }
+            //Dashes print
+            if ( j != b->size - 1 ) {
+                printf( "-" );
+            }
+        }
+        printf( "\n" );
+    }
+    //Print characters at bottom
+    printf("   ");
+    char letter = 'A';
+    for ( int i = 0; i < b->size; i++ ) {
+        printf( "%c ", letter );
+        letter++;
+    }
+    printf( "\n" );
+}
+
+unsigned char board_formal_coord( board* b, unsigned char x, unsigned char y, char* formal_coord ) 
+{
+    //Assume x and y are passed in as integers from 0 to size, check that bounds are correct
+    if ( x < 0 || x > b->size || y < 0 || y > b->size ) {
+        return COORDINATE_ERR;
+    }
+    //Convert to row/column coordinates, incrementing to account for 0 based index
+    char row = x + 'A';
+    y++; //Offset for zero indexing
+    char coord[4];
+    if ( y > 9 ) { //double digit number
+        char yFirstDigit = y / 10 + '0';
+        char ySecondDigit = y % 10 + '0';
+        coord[0] = row;
+        coord[1] = yFirstDigit;
+        coord[2] = ySecondDigit;
+        coord[3] = '\0';
+    } else {
+        
+        char column = y + '0';
+        coord[0] = row;
+        coord[1] = column;
+        coord[2] = '\0';
+    }
+    
+    strcpy( formal_coord, coord);
+    
+    return SUCCESS;
+}
+
+unsigned char board_coord( board* b, const char* formal_coord, unsigned char* x, unsigned char* y )
+{
+    //Extract x and convert, easy since it is always and only the first character
+    unsigned char xTemp = formal_coord[0];
+    xTemp = xTemp - 'A';
+    //Y is harder to extract as it can have two digits. Use null terminator to determine when the string ends
+    unsigned char yTemp;
+    if ( formal_coord[2] < '0' || formal_coord[2] > '9' ) { //Single digit
+        yTemp = formal_coord[1];
+        yTemp = yTemp - '1';
+    } else { //Double digit
+        unsigned char yTempFirstDigit = formal_coord[1] - '0';
+        unsigned char yTempSecondDigit = formal_coord[2] - '0';
+        yTemp = yTempFirstDigit * 10 + yTempSecondDigit - 1;
+    }
+    //Check bounds
+    if ( xTemp < 0 || xTemp > b->size || yTemp < 0 || yTemp > b->size ) {
+        return COORDINATE_ERR;
+    }
+    
+    //Assign x and y
+    *x = xTemp;
+    *y = yTemp;
+    return SUCCESS;
+}
+
+unsigned char board_get( board* b, unsigned char x, unsigned char y ) {
+    //Cast grid
+    unsigned char( *grid )[ b->size ] = ( unsigned char( * )[ b->size ] ) b->grid;
+    //Check bounds
+    if ( x < 0 || x >= b->size || y < 0 || y >= b->size ) {
+        exit( COORDINATE_ERR );
+    }
+    return grid[y][x];
+}
+
+void board_set( board* b, unsigned char x, unsigned char y, unsigned char stone ){
+    if ( x < 0 || x >= b->size || y < 0 || y >= b->size ) {
+        exit( COORDINATE_ERR );
+    } else if ( stone > 2 ) {
+        exit( STONE_TYPE_ERR );
+    }
+    //Cast grid
+    unsigned char( *grid )[ b->size ] = ( unsigned char( * )[ b->size ] ) b->grid;
+    //Assign stone
+    grid[y][x] = stone;
+}
+
+bool board_is_full( board* b ) {
+    //Cast grid
+    unsigned char( *grid )[ b->size ] = ( unsigned char( * )[ b->size ] ) b->grid;
+    //Check grid
+    bool full = true;
+    for ( int i = 0; i < b->size; i++ ) {
+        for ( int j = 0; j < b->size; j++ ) {
+            if ( grid[i][j] == 0 ) {
+                full = false;
+            }
+        }
+    }
+    return full;
+}

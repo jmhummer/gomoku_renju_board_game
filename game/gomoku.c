@@ -1,0 +1,77 @@
+#include "game.h"
+#include "board.h"
+#include "io.h"
+#include "error-codes.h"
+#include <string.h>
+
+/**
+ * Prints out the error message to the console if command line args are not correct.
+ */
+static void arg_error();
+
+/**
+ * Initiates a game of Gomoku (freestyle).
+ * Use -b in arguments followed by board size to create a board 15x15 17x17 or 19x19.
+ * Use -r followed by a file name to resume a given game.
+ * Use -o followed by a file name to save the game after it is stopped or finished.
+ * @param argc The total number of arguments.
+ * @param argv[] Array of arguments.
+ * return 0 if successful.
+ */
+int main( int argc, char *argv[] ) {
+    bool custom_board = false;
+    bool resume = false;
+    bool save = false;
+    unsigned char board_size = 15;
+    char* path;
+    game* g = game_create( board_size, GAME_FREESTYLE );
+    
+    if ( argc > 5 || argc % 2 == 0 ) { //Too many arguments supplied OR even number of arguments supplied
+        arg_error();
+    } else {
+        for ( int i = 1; i < argc; i += 2 ) { //Iterate through every other arg expecting a -b -o or -r          
+            if ( (unsigned char) argv[i][0] != '-' || (unsigned char) argv[i + 1][0] == '-' ) {
+                arg_error();
+            } else if ( argv[i][1] == 'b' ) { //BOARD ARGUMENT FOUND
+                if ( strlen( argv[i + 1] ) > 2 || resume ) {
+                    arg_error();
+                }
+                board_size = atoi( argv[i + 1] ); //convert next argument to number
+                
+                //Recreate game with custom size
+                g = game_create( board_size, GAME_FREESTYLE );
+                
+                custom_board = true;
+                
+            } else if ( argv[i][1] == 'r' ) { //RESUME ARGUMENT FOUND
+                if ( custom_board ) {
+                    arg_error();
+                }
+                g = game_import( (char *) argv[ i + 1 ] );
+                resume = true;
+            } else if ( argv[i][1] == 'o' ) { //SAVE OPTION FOUND
+                save = true;
+                path = ( (char *) argv[ i + 1 ] );
+            }
+        }
+        
+        if ( resume ) {
+            game_resume( g );
+        } else if ( g->state == GAME_STATE_PLAYING ) {
+            game_loop(g);
+        }
+        
+        if ( save ) {
+            game_export( g, path ); 
+        }
+        
+        //Free game memory
+        game_delete( g );
+    }
+    return 0;
+}
+
+static void arg_error() {
+    printf( "usage: ./gomoku [-r <unfinished-match.gmk>] [-o <saved-match.gmk>] [-b <15|17|19>]\n       -r and -b conflicts with each other\n" );
+    exit( ARGUMENT_ERR );
+}

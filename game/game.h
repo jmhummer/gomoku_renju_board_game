@@ -1,0 +1,105 @@
+#ifndef _GAME_H
+#define _GAME_H
+#include "board.h"
+#include <stdbool.h>
+#include <stdlib.h>
+#include <unistd.h>
+#define GAME_FREESTYLE 0
+#define GAME_RENJU 1
+#define GAME_STATE_PLAYING 0
+#define GAME_STATE_FORBIDDEN 1
+#define GAME_STATE_STOPPED 2
+#define GAME_STATE_FINISHED 3
+#define FOUR_IN_A_ROW 4
+#define FIVE_IN_A_ROW 5
+#define MAX_OPEN_FOURS 1
+#define INITIAL_CAPACITY 16
+
+typedef struct {
+    unsigned char x;
+    unsigned char y;
+    unsigned char stone;
+} move;
+
+typedef struct {
+    board* board;
+    unsigned char type;
+    unsigned char stone;
+    unsigned char state;
+    unsigned char winner;
+    move* moves;
+    size_t moves_count;
+    size_t moves_capacity;
+} game;
+
+/**
+ * Creates and returns a dynamically allocated game of the specified type.
+ * @param board_size The desired size of the board.
+ * @param game_type The desired game type (freestyle or renju).
+ * @return The newly created and initialized game struct.
+ */
+game* game_create(unsigned char board_size, unsigned char game_type);
+
+/**
+ * Frees the memory used for the given game struct.
+ * @param g The game struct to free. Exits if this is NULL.
+ */
+void game_delete(game* g);
+
+/**
+ * Reads the player's actions and updates the game accordingly.
+ * Reprompts the player for input if the input is badly formatted.
+ * @param g The game to be updated.
+ * @return false if the given game is not in the GAME_STATE_PLAYING state. 
+ *         true if the game is successfully updated.
+ */
+bool game_update(game* g);
+
+/** 
+ * Repeats printing the board and prompting the player for a move until 
+ * game_update() returns false.
+ * @param g The current game.
+ */
+void game_loop(game* g);
+
+/**
+ * Restarts the game loop for a saved game.
+ * Assumes input game type matches the executable argument.
+ * @param g The game to resume.
+ */
+void game_resume(game* g);
+
+/** 
+ * Replays a saved game.
+ * @param g The game to replay
+ */
+void game_replay(game* g);
+
+/**
+ * Prints all moves recorded from the game along with the player that made them.
+ * @param g The game with recorded moves to print.
+ */
+void print_moves( game* g );
+
+/**
+ * Receives information on the desired move and checks if the move can be made 
+ * according to the rules. Checks if any game end conditions have been met. 
+ * Makes the move and saves it to the moves list for the given game.
+ * @param g The game in which the move should be made.
+ * @param x The horizontal coordinate of the move to make.
+ * @param y The vertical coordinate of the move to make.
+ * @return True if a stone was placed, false if it was not placed.
+ */
+bool game_place_stone(game* g, unsigned char x, unsigned char y);
+
+/**
+ * Saves the move with the current active stone and the given coordinates to the moves list.
+ * Grows the moves list by doubling if necessary.
+ * @param g The game to check.
+ * @param x The horizontal coordinate of the last stone placed.
+ * @param y The vertical coordinate of the last stone placed.
+ * @return True if the move was successfully saved, false if not.
+ */
+bool save_move( game* g, const unsigned char x, const unsigned char y);
+
+#endif
