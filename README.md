@@ -14,9 +14,9 @@
 which is called an overline, there's no restriction on this in freestyle Gomoku. The line can be created vertically, horizontally, or diagonally. A few examples are provided below.
 
 <picture>
-<source media="(prefers-color-scheme: dark)" srcset="media/gomoku_example.png">
- <source media="(prefers-color-scheme: light)" srcset="media/gomoku_example.png">
- <img alt="An image of a partially completed game of gomoku using ASCII characters to visualize the board." src="media/gomoku_example.png">
+<source media="(prefers-color-scheme: dark)" srcset="media/gomoku_examples.png">
+ <source media="(prefers-color-scheme: light)" srcset="media/gomoku_examples.png">
+ <img alt="An image of a four different sample boards with five black stones in a line oriented different directions." src="media/gomoku_examples.png">
 </picture>
 
  ### Renju Basics
@@ -30,8 +30,8 @@ examples of open fours.
 
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="media/renju_example.png">
- <source media="(prefers-color-scheme: light)" srcset="media/renju_example.png">
- <img alt="An image of a partially completed game of gomoku using ASCII characters to visualize the board." src="media/renju_example.png">
+ <source media="(prefers-color-scheme: light)" srcset="media/renju_examples.png">
+ <img alt="An image of a four different sample boards with four black stones in a line oriented different directions." src="media/renju_examples.png">
 </picture>
 
 With this concept clear, we define the forbidden moves in Renju as: (1) a move that creates at least two open fours; (2) a move that creates at least one
