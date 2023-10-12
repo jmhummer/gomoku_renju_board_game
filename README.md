@@ -48,9 +48,12 @@ stone player into making a forbidden move.
 4. Run either the Gomoku or Renju program with the following commands. In the following list, ./gomoku can be substituted for ./renju.
 
 ./gomoku                    -> Initiates a gomoku game with a 15x15 size board\
-./gomoku -b ##              -> Initiates a gomoku game with a ##x## size board. Boards can be 15x15, 17x17 or 19x19\
+\
+./gomoku -b ##              -> Initiates a gomoku game with a ## by ## size board. Boards can be 15x15, 17x17 or 19x19\
+\
 ./gomoku -o filename.gmk    -> Initiates a gomoku game which will save its progress as the given file when the program ends\
-./gomoku -r filename.gmk    -> Resumes a saved gomoku game from its saved point\
+\
+./gomoku -r filename.gmk    -> Resumes a saved gomoku game from its saved point
 
 The above commands can be used any in combination with each other with the exception of -b and -r; the board size of an existing game cannot be edited.
 
